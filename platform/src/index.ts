@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { parentAuthRoutes } from './routes/parent-auth';
 import { childAuthRoutes } from './routes/child-auth';
 import { authorAuthRoutes } from './routes/author-auth';
+import { childrenRoutes } from './routes/children';
 
 dotenv.config();
 
@@ -14,10 +15,13 @@ const app = Fastify({ logger: true });
 app.register(cors, { origin: true });
 app.register(jwt, { secret: process.env.JWT_SECRET || 'dev-secret' });
 
-// Routes
+// Auth routes
 app.register(parentAuthRoutes, { prefix: '/api/auth/parent' });
-app.register(childAuthRoutes, { prefix: '/api/auth/child' });
+app.register(childAuthRoutes,  { prefix: '/api/auth/child' });
 app.register(authorAuthRoutes, { prefix: '/api/auth/author' });
+
+// Resource routes
+app.register(childrenRoutes, { prefix: '/api/children' });
 
 // Health check
 app.get('/healthz', async () => ({
