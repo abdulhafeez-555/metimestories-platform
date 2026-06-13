@@ -8,6 +8,8 @@ import { authorAuthRoutes } from './routes/author-auth';
 import { childrenRoutes } from './routes/children';
 import { storiesRoutes } from './routes/stories';
 import { personalisationRoutes } from './routes/personalisation';
+import { videoJobsRoutes } from './routes/video-jobs';
+import { webhookRoutes } from './routes/webhook';
 
 dotenv.config();
 
@@ -18,14 +20,16 @@ app.register(cors, { origin: true });
 app.register(jwt, { secret: process.env.JWT_SECRET || 'dev-secret' });
 
 // Auth routes
-app.register(parentAuthRoutes, { prefix: '/api/auth/parent' });
-app.register(childAuthRoutes,  { prefix: '/api/auth/child' });
-app.register(authorAuthRoutes, { prefix: '/api/auth/author' });
+app.register(parentAuthRoutes,  { prefix: '/api/auth/parent' });
+app.register(childAuthRoutes,   { prefix: '/api/auth/child' });
+app.register(authorAuthRoutes,  { prefix: '/api/auth/author' });
 
 // Resource routes
-app.register(childrenRoutes,       { prefix: '/api/children' });
-app.register(storiesRoutes,        { prefix: '/api/stories' });
+app.register(childrenRoutes,        { prefix: '/api/children' });
+app.register(storiesRoutes,         { prefix: '/api/stories' });
 app.register(personalisationRoutes, { prefix: '/api/personalisation' });
+app.register(videoJobsRoutes,       { prefix: '/api/video-jobs' });
+app.register(webhookRoutes,         { prefix: '/api/webhook' });
 
 // Health check
 app.get('/healthz', async () => ({
