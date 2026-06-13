@@ -10,6 +10,7 @@ import { storiesRoutes } from './routes/stories';
 import { personalisationRoutes } from './routes/personalisation';
 import { videoJobsRoutes } from './routes/video-jobs';
 import { webhookRoutes } from './routes/webhook';
+import { storyGenerationRoutes } from './routes/story-generation';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.register(storiesRoutes,         { prefix: '/api/stories' });
 app.register(personalisationRoutes, { prefix: '/api/personalisation' });
 app.register(videoJobsRoutes,       { prefix: '/api/video-jobs' });
 app.register(webhookRoutes,         { prefix: '/api/webhook' });
+app.register(storyGenerationRoutes, { prefix: '/api/story-generation' });
 
 // Health check
 app.get('/healthz', async () => ({
