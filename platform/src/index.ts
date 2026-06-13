@@ -4,6 +4,7 @@ import jwt from '@fastify/jwt';
 import dotenv from 'dotenv';
 import { parentAuthRoutes } from './routes/parent-auth';
 import { childAuthRoutes } from './routes/child-auth';
+import { authorAuthRoutes } from './routes/author-auth';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.register(jwt, { secret: process.env.JWT_SECRET || 'dev-secret' });
 // Routes
 app.register(parentAuthRoutes, { prefix: '/api/auth/parent' });
 app.register(childAuthRoutes, { prefix: '/api/auth/child' });
+app.register(authorAuthRoutes, { prefix: '/api/auth/author' });
 
 // Health check
 app.get('/healthz', async () => ({
