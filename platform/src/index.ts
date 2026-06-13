@@ -6,6 +6,7 @@ import { parentAuthRoutes } from './routes/parent-auth';
 import { childAuthRoutes } from './routes/child-auth';
 import { authorAuthRoutes } from './routes/author-auth';
 import { childrenRoutes } from './routes/children';
+import { storiesRoutes } from './routes/stories';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.register(authorAuthRoutes, { prefix: '/api/auth/author' });
 
 // Resource routes
 app.register(childrenRoutes, { prefix: '/api/children' });
+app.register(storiesRoutes,  { prefix: '/api/stories' });
 
 // Health check
 app.get('/healthz', async () => ({
