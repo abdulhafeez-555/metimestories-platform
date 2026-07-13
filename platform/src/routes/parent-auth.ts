@@ -1,7 +1,8 @@
-import { FastifyInstance } from 'fastify';
+﻿import { FastifyInstance } from 'fastify';
 import bcrypt from 'bcrypt';
 import { query } from '../db';
 import { send2FACode, generate2FACode } from '../utils/email';
+import { verifyGoogleToken } from '../utils/googleAuth';
 
 export async function parentAuthRoutes(fastify: FastifyInstance) {
 
@@ -159,6 +160,86 @@ export async function parentAuthRoutes(fastify: FastifyInstance) {
         last_name: parent.last_name,
         role: 'parent',
       }
+    });
+  });
+
+  // POST /api/auth/parent/google
+  // Verifies a Google ID token, then finds-or-creates the account.
+  // If an email/password account already exists with this email,
+  // links the Google identity to it rather than creating a duplicate.
+  // No 2FA step here - Google's own sign-in is the verification.
+  fastify.post('/google', async (request, reply) => {
+    const { id_token } = request.body as any;
+
+    if (!id_token) {
+      return reply.status(400).send({ error: 'id_token is required' });
+    }
+
+    let profile;
+    try {
+      profile = await verifyGoogleToken(id_token);
+    } catch (err) {
+      return reply.status(401).send({ error: 'Could not verify this Google account. Please try again.' });
+    }
+
+    const existing = await query(
+      `SELECT id, uuid, email, first_name, last_name, status, provider_user_id
+       FROM parents WHERE email = $1 AND deleted_at IS NULL`,
+      [profile.email]
+    );
+
+    let parent;
+
+    if (existing.rows.length > 0) {
+      parent = existing.rows[0];
+
+      if (parent.status === 'suspended') {
+        return reply.status(403).send({ error: 'Account suspended. Contact support.' });
+      }
+
+      if (!parent.provider_user_id) {
+        await query(
+          `UPDATE parents
+           SET provider_user_id = $1, profile_picture = $2,
+               email_verified = true, email_verified_at = NOW()
+           WHERE id = $3`,
+          [profile.googleId, profile.picture, parent.id]
+        );
+      }
+    } else {
+      const referral_code = Math.random().toString(36).substring(2, 10).toUpperCase();
+      const result = await query(
+        `INSERT INTO parents
+           (email, first_name, last_name, auth_provider, provider_user_id,
+            profile_picture, email_verified, email_verified_at, referral_code)
+         VALUES ($1, $2, $3, 'google', $4, $5, true, NOW(), $6)
+         RETURNING id, uuid, email, first_name, last_name`,
+        [profile.email, profile.firstName, profile.lastName, profile.googleId, profile.picture, referral_code]
+      );
+      parent = result.rows[0];
+    }
+
+    await query(
+      'UPDATE parents SET last_login_at = NOW(), last_active_at = NOW() WHERE id = $1',
+      [parent.id]
+    );
+
+    const token = fastify.jwt.sign(
+      { parentId: parent.id, email: parent.email, role: 'parent' },
+      { expiresIn: '7d' }
+    );
+
+    return reply.send({
+      message: 'Login successful',
+      token,
+      parent: {
+        id: parent.id,
+        uuid: parent.uuid,
+        email: parent.email,
+        first_name: parent.first_name,
+        last_name: parent.last_name,
+        role: 'parent',
+      },
     });
   });
 
