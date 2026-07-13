@@ -1,0 +1,134 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  color-scheme: dark;
+}
+html, body, #root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+input, textarea, select {
+  color-scheme: dark;
+}
+
+/* Author portal theme (scoped, orange/amber + Georgia).
+   HSL triples (no hsl() wrapper on the variable itself) —
+   the standard shadcn/ui convention. This is required so
+   Tailwind opacity-modifier classes (bg-primary/10 etc.)
+   and inline hsl(var(--x)) usages both work correctly. */
+.author-theme {
+  color-scheme: light;
+
+  --background: 40 33% 97%;
+  --foreground: 20 55% 10%;
+  --border: 35 30% 88%;
+  --input: 30 22% 80%;
+  --ring: 20 65% 47%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 20 55% 10%;
+  --card-border: 35 30% 88%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 55% 10%;
+  --popover-border: 35 30% 88%;
+
+  --primary: 20 65% 47%;
+  --primary-light: 28 65% 55%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 35 45% 94%;
+  --secondary-foreground: 25 30% 30%;
+
+  --muted: 35 45% 94%;
+  --muted-foreground: 30 25% 42%;
+
+  --accent: 35 50% 98%;
+  --accent-foreground: 20 55% 10%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  --sidebar: 30 25% 15%;
+  --sidebar-foreground: 0 0% 90%;
+  --sidebar-border: 30 15% 25%;
+  --sidebar-primary: 28 65% 55%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 30 15% 25%;
+  --sidebar-accent-foreground: 0 0% 80%;
+
+  --radius: 0.875rem;
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  min-height: 100%;
+}
+
+.author-theme h1,
+.author-theme h2,
+.author-theme h3,
+.author-theme .font-serif {
+  font-family: Georgia, serif;
+}
+
+.author-theme input,
+.author-theme textarea,
+.author-theme select {
+  color-scheme: light;
+}
+
+.author-theme input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
+
+.author-theme {
+  --button-outline: rgba(0,0,0,0.10);
+  --badge-outline: rgba(0,0,0,0.05);
+  --elevate-1: rgba(0,0,0,0.03);
+  --elevate-2: rgba(0,0,0,0.08);
+
+  --primary-border: 20 65% 40%;
+  --secondary-border: 35 30% 85%;
+  --muted-border: 35 30% 85%;
+  --accent-border: 35 30% 88%;
+  --destructive-border: 0 72% 44%;
+}
+
+.author-theme .hover-elevate:not(.no-default-hover-elevate),
+.author-theme .active-elevate:not(.no-default-active-elevate),
+.author-theme .hover-elevate-2:not(.no-default-hover-elevate),
+.author-theme .active-elevate-2:not(.no-default-active-elevate) {
+  position: relative;
+  z-index: 0;
+}
+.author-theme .hover-elevate:not(.no-default-hover-elevate)::after,
+.author-theme .active-elevate:not(.no-default-active-elevate)::after,
+.author-theme .hover-elevate-2:not(.no-default-hover-elevate)::after,
+.author-theme .active-elevate-2:not(.no-default-active-elevate)::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0px;
+  border-radius: inherit;
+  z-index: 999;
+}
+.author-theme .hover-elevate:hover::after,
+.author-theme .active-elevate:active::after {
+  background-color: var(--elevate-1);
+}
+.author-theme .hover-elevate-2:hover::after,
+.author-theme .active-elevate-2:active::after {
+  background-color: var(--elevate-2);
+}
+.author-theme .border.hover-elevate::after,
+.author-theme .border.active-elevate::after,
+.author-theme .border.hover-elevate-2::after,
+.author-theme .border.active-elevate-2::after {
+  inset: -1px;
+}

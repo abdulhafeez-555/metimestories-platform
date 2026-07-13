@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Me Time Stories — Family Frontend
 
-## Getting Started
+The parent/child-facing frontend, built fresh against the existing backend.
+This is a new, standalone Vite project — separate from the old player-portal
+repo. The academy/internal/marketing systems live elsewhere and are out of
+scope here.
 
-First, run the development server:
+## Pages built
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+| Route | Page | Purpose |
+|---|---|---|
+| `/` | PlaceholderHome | Temporary landing screen — real homepage integrated later |
+| `/family/register` | ParentRegister | Create a parent account |
+| `/family/login` | ParentLogin | Two-step login (password → email code) |
+| `/family/dashboard` | ParentDashboard | List children, add a child |
+| `/family/add-child` | AddChild | Create a child profile + appearance |
+| `/family/child-login` | ChildPinLogin | Child enters their 4-digit PIN |
+| `/family/stories` | StoryLibrary | Browse stories by value |
+| `/family/story/:storyId` | FamilyStoryReader | The personalised story, scene by scene |
+
+## Running locally
+
+You need the backend running first, in a separate terminal:
+
+```
+cd C:\MeTimeStories\platform
+npx ts-node src\index.ts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then, in this folder:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open the URL Vite prints (usually `http://localhost:5173`).
 
-## Learn More
+API calls to `/api/*` are automatically proxied to `http://localhost:3000`
+(the backend) — see `vite.config.ts`. No CORS setup needed for local dev.
 
-To learn more about Next.js, take a look at the following resources:
+## Every API call in this project was verified against the real backend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Every function in `src/lib/familyApi.ts` was checked field-by-field against
+the actual Fastify route handlers before being trusted — request body shape,
+response shape, which token (parent vs child) gets attached, and every error
+status code. See the team's review notes for the full trace.
